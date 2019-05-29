@@ -1,6 +1,3 @@
-# encoding: utf-8
-# copyright: 2017, Christoph Hartmann
-
 title 'two tier setups'
 
 # load data from terraform output
@@ -12,7 +9,7 @@ VPC_ID = params['vpc_id']['value']
 
 # execute test
 describe aws_vpc(vpc_id: VPC_ID) do
-  its('cidr_block') { should cmp '10.0.0.0/16' }
+  its('cidr_block') { should cmp '10.10.0.0/16' }
 end
 
 describe aws_security_group(group_name: 'terraform_example') do
