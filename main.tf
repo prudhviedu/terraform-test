@@ -3,7 +3,6 @@
 provider "aws" {
   region = "${var.aws_region}"
   version = "~> 2.11"
-  profile = "default"
 }
 
 # Create a VPC to launch our instances into
