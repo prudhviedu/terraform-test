@@ -16,6 +16,7 @@ def go() {
     try {
       sh "export AWS_PROFILE='default'"
       sh "export AWS_REGION='us-east-1'"
+      sh "export AWS_SDK_LOAD_CONFIG=1"
       sh "terraform init"
       sh "terraform plan"      
     } catch (e) {
