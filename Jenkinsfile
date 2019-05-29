@@ -13,12 +13,12 @@ def go() {
     def git_branch = get_git_branch()
     echo "current git sha is ${git_hash} and branch is ${git_branch}"
 
-    // fetch the docker container used to run pants
     try {
       sh "export AWS_PROFILE='test-env'"
       sh "export AWS_REGION='us-east-1'"
       sh "terraform init"
       sh "echo 'yes' |terraform apply"
+      sh 'terraform output --json > test/verify/files/terraform.json"
       sh "inspec exec test/verify -t aws://us-east-1"
     } catch (e) {
       throw e
