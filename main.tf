@@ -133,7 +133,7 @@ resource "null_resource" "cluster" {
   connection {
       host        = "${aws_instance.web.public_ip}"
       user        = "ubuntu"
-      private_key = "${file("/tmp/ec2-key.pem")}"
+      private_key = "${file("/home/ubuntu/.ssh/ec2-key.pem")}"
 
   }
 
