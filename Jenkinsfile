@@ -16,7 +16,7 @@ def go() {
     try {
       sh "export AWS_PROFILE='default'"
       sh "export AWS_REGION='us-east-1'"
-      sh "terraoform init"
+      sh "terraform init"
       sh "terraform plan"      
     } catch (e) {
       throw e
