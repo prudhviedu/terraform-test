@@ -1,12 +1,13 @@
 pipeline {
   agent any
-  
+  node {
+    checkout scm
+  }
   stages {
    
     stage ('terraform test') {
       steps {
-      checkout scm
-      sh 'terraform init'
+        sh 'terraform init'
       
       }
     }  
