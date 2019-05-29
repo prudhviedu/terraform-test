@@ -1,6 +1,10 @@
 node {
   checkout scm
-  echo "code is cloned"
+  if (fileExists('SKIP_BUILD')) {
+    echo "Located SKIP_BUILD in project's main folder. Skipping the build right away."
+  } else {
+    go()
+  }
 }
 
 def go() {
