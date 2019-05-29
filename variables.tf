@@ -1,6 +1,6 @@
 variable "aws_region" {
   description = "AWS region to launch servers."
-  default     = "us-east-1"
+  default     = "eu-central-1"
 }
 
 # Ubuntu Precise 12.04 LTS (x64)
