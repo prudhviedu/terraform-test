@@ -18,7 +18,7 @@ def go() {
       sh "export AWS_PROFILE='test-env'"
       sh "export AWS_REGION='us-east-1'"
       sh "terraform init"
-      sh "terraform apply"
+      sh "echo 'yes' |terraform apply"
       sh "inspec exec test/verify -t aws://us-east-1"
     } catch (e) {
       throw e
