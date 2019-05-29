@@ -1,4 +1,3 @@
-# Two-Tier example from https://github.com/terraform-providers/terraform-provider-aws
 
 # Specify the provider and access details
 provider "aws" {
@@ -146,3 +145,4 @@ resource "null_resource" "cluster" {
     ]
   }
 }
+
