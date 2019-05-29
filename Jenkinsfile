@@ -1,3 +1,4 @@
+stage name: 'Terraform Apply&Test'
 node {
   checkout scm
   if (fileExists('SKIP_BUILD')) {
@@ -14,11 +15,11 @@ def go() {
 
     // fetch the docker container used to run pants
     try {
-      sh "export AWS_PROFILE='default'"
+      sh "export AWS_PROFILE='test-env'"
       sh "export AWS_REGION='us-east-1'"
-      sh "export AWS_SDK_LOAD_CONFIG=1"
       sh "terraform init"
-      sh "terraform plan"      
+      sh "terraform apply"
+      sh "inspec exec test/verify -t aws://us-east-1"
     } catch (e) {
       throw e
     }
