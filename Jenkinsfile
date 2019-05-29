@@ -20,6 +20,7 @@ def go() {
       sh "echo 'yes' |terraform apply"
       sh "terraform output --json > test/verify/files/terraform.json"
       sh "inspec exec test/verify -t aws://us-east-1"
+      sh "echo 'yes' |terraform destroy"
     } catch (e) {
       throw e
     }
