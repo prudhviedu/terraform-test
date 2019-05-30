@@ -1,8 +1,8 @@
-# Basic Two-Tier AWS Architecture
+<!# Basic Two-Tier AWS Architecture
 
 ## Overview Terraform
 
-<!This provides a template for running a simple two-tier architecture on Amazon Web services. The premise is that you have stateless app servers running behind an ELB serving traffic.
+This provides a template for running a simple two-tier architecture on Amazon Web services. The premise is that you have stateless app servers running behind an ELB serving traffic.
 
 *To* simplify the example, this intentionally ignores deploying and getting your application onto the servers. However, you could do so either via
 [provisioners](https://www.terraform.io/docs/provisioners/) and a configuration management tool, or by pre-baking configured AMIs with
@@ -17,11 +17,11 @@ To run, configure your AWS provider as described in
 
 https://www.terraform.io/docs/providers/aws/index.html
 
-Run with a command like this:>
+Run with a command like this:
 
 ```
 terraform apply -var 'key_name={your_aws_key_name}' \
-   -var 'public_key_path={location_of_your_key_in_your_local_machine}'
+   -var 'public_key_path={location_of_your_key_in_your_local_machine}'>
 ```
 
 ## Overview InSpec
