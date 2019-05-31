@@ -12,7 +12,7 @@ def go() {
     def git_hash = get_git_hash()
     def git_branch = get_git_branch()
     echo "current git sha is ${git_hash} and branch is ${git_branch}"
-    if ( get_git_branch() != "master ) {
+    if ( get_git_branch() != "master" ) {
         try {
           sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; terraform init"
           sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform apply"
