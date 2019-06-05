@@ -8,6 +8,7 @@ This provides a template for running a simple two-tier architecture on Amazon We
 [provisioners](https://www.terraform.io/docs/provisioners/) and a configuration management tool, or by pre-baking configured AMIs with
 [Packer](http://www.packer.io).
 
+
 This example will also create a new EC2 Key Pair in the specified AWS Region. The key name and path to the public key must be specified via the  
 terraform command vars.
 
@@ -18,6 +19,8 @@ To run, configure your AWS provider as described in
 https://www.terraform.io/docs/providers/aws/index.html
 
 Run with a command like this:
+
+
 
 ```
 terraform apply -var 'key_name={your_aws_key_name}' 
