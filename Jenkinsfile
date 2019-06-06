@@ -28,7 +28,6 @@ def go() {
           sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform apply"
           sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; terraform output --json > test/verify/files/terraform.json"
           sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; inspec exec test/verify -t aws://eu-central-1"
-          sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform destroy"
         } catch (e) {
             throw e
         }
