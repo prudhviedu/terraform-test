@@ -1,7 +1,7 @@
 title 'two tier setups'
 
 # load data from terraform output
-content = inspec.profile.file("../files/terraform.json")
+content = inspec.profile.file("terraform.json")
 params = JSON.parse(content)
 
 INTANCE_ID = params['instance_id']['value']
