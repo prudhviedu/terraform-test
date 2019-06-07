@@ -19,7 +19,7 @@ def go() {
           sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; terraform output --json > test/verify/files/terraform.json"
           sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; inspec exec test/verify -t aws://eu-central-1"
           sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform destroy"
-          sh "inspec exec test/service_test -t ssh://ubuntu@3.85.90.156 -i /home/ubuntu/ec2-key.pem"
+          sh "inspec exec test/service_test -t ssh://ubuntu@3.84.115.166 -i /home/ubuntu/ec2-key.pem"
         } catch (e) {
             throw e
         }
