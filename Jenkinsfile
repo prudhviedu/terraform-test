@@ -28,10 +28,18 @@ def go() {
 			run_ansible()
 			break;
                 } else if ( get_git_branch() != "master" && tool_name == "terraform" ) {
-                        echo "Running Terraform"
-                        run_terraform()
-                        echo "Running Ansible"
-                        run_ansible()
+			try {
+                        	echo "Running Terraform"
+        			sh "build-support/run_terraform.sh"
+			} catch (e) {
+			        throw e
+			}
+                        try {   
+                                echo "Running Ansible"
+                                sh "build-support/run_ansible.sh"
+                        } catch (e) { 
+                                throw e       
+                        }    			
                         break;
                 } else if ( get_git_branch() != "master" && tool_name == "ansible" ) {
                         echo "Running Ansible"
@@ -56,7 +64,7 @@ def get_git_branch() {
 }
 
 def get_changed_dir() {
-    sh "sh build-support/check-effected.sh > effected_dir"
+    sh "build-support/check-effected.sh > effected_dir"
     readFileIntoLines("effected_dir")
 }
 def readFileIntoLines(filename) {
@@ -69,13 +77,6 @@ def readFileIntoLines(filename) {
 }
 
 run_packer() {
-   sh "sh build-support/run_packer.sh"
+   sh "build-support/run_packer.sh"
 }
 
-run_terraform() {
-   sh "sh build-support/run_terraform.sh"
-}
-
-run_ansible() {
-   sh "sh build-support/run_ansible.sh"
-}

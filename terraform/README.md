@@ -91,5 +91,5 @@ inspec exec test/verify -t aws://
 testing
 testing1
 testing2
-testing2
+testing3
 testing2
