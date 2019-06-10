@@ -14,7 +14,8 @@ def go() {
     echo "current git sha is ${git_hash} and branch is ${git_branch}"
     echo "Running the check to see which files got effected"
     try {
-       sh "build-support/check-effected.sh ${git_hash}"
+	sh "build-support/check-effected.sh ${git_hash} > effected_dir"
+	cat effected_dir
     } catch (e) {
        throw e
     }
