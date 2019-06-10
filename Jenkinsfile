@@ -13,12 +13,8 @@ def go() {
     def git_branch = get_git_branch()
     echo "current git sha is ${git_hash} and branch is ${git_branch}"
     echo "Running the check to see which files got effected"
-    try {
-	sh "build-support/check-effected.sh ${git_hash} > effected_dir"
-	cat effected_dir
-    } catch (e) {
-       throw e
-    }
+    def git_changed_dir = get_changed_dir()
+    echo "changed directories are ${git_changed_dir}"
 }
 
 
@@ -32,7 +28,7 @@ def get_git_branch() {
     readFile("gitbranch").replace("\n", "")
 }
 
-def get_git_branch() {
-    sh "./build-support/check-effected.sh > effected_dir"
+def get_changed_dir() {
+    sh "./build-support/check-effected.sh ${git_hash} > effected_dir"
     sh "cat effected_dir"
 }
