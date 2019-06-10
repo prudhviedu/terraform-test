@@ -20,7 +20,6 @@ def go() {
     }
 }
 
-}
 
 def get_git_hash() {
     sh "git rev-parse HEAD > githash"
