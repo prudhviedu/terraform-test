@@ -13,8 +13,36 @@ def go() {
     def git_branch = get_git_branch()
     echo "current git sha is ${git_hash} and branch is ${git_branch}"
     echo "Running the check to see which files got effected"
-    def git_changed_dir = get_changed_dir()
+    def changed_services = get_changed_dir()
     echo "changed directories are ${git_changed_dir}"
+    for (i = 0; i < changed_dir.size(); i++) {
+        def tool_name = changed_dir[i]
+        if (dir_path.trim() != "") {
+
+                if ( get_git_branch() != "master" && tool_name == "packer") {
+			echo "Running PACKER"
+			run_packer()
+			echo "Running Terraform"
+			run_terraform()
+			echo "Running Ansible"
+			run_ansible()
+			break;
+                } else if ( get_git_branch() != "master" && tool_name == "terraform" ) {
+                        echo "Running Terraform"
+                        run_terraform()
+                        echo "Running Ansible"
+                        run_ansible()
+                        break;
+                } else if ( get_git_branch() != "master" && tool_name == "ansible" ) {
+                        echo "Running Ansible"
+                        run_ansible()
+                        break;
+                } else {
+                        echo "There was no change in packer, terraform and ansible related code... no build process..."
+                    }
+                }
+            }
+        }
 }
 
 
@@ -39,4 +67,16 @@ def readFileIntoLines(filename) {
     } else {
         return contents.split("\n")
     }
+}
+
+run_packer() {
+   sh "sh build-support/run_packer.sh"
+}
+
+run_terraform() {
+   sh "sh build-support/run_terraform.sh"
+}
+
+run_ansible() {
+   sh "sh build-support/run_ansible.sh"
 }
