@@ -22,19 +22,19 @@ def go() {
                 if ( get_git_branch() != "master" && tool_name == "packer") {
                         try {
                                 echo "Running PACKER"
-                                sh "build-support/run_packer.sh"
+				run_packer()
                         } catch (e) {
                                 throw e
                         }
                         try {
                                 echo "Running Terraform"
-                                sh "build-support/run_terraform.sh"
+				run_terraform()
                         } catch (e) {
                                 throw e
                         }
                         try {
                                 echo "Running Ansible"
-                                sh "build-support/run_ansible.sh"
+				run_ansible()
                         } catch (e) {
                                 throw e
                         }
@@ -42,13 +42,13 @@ def go() {
                 } else if ( get_git_branch() != "master" && tool_name == "terraform" ) {
 			try {
                         	echo "Running Terraform"
-        			sh "build-support/run_terraform.sh"
+				run_terraform()
 			} catch (e) {
 			        throw e
 			}
                         try {   
                                 echo "Running Ansible"
-                                sh "build-support/run_ansible.sh"
+				run_ansible()
                         } catch (e) { 
                                 throw e       
                         }    			
@@ -56,7 +56,7 @@ def go() {
                 } else if ( get_git_branch() != "master" && tool_name == "ansible" ) {
                         try {
                                 echo "Running Ansible"
-                                sh "build-support/run_ansible.sh"
+				run_ansible()
                         } catch (e) {
                                 throw e
                         }
@@ -92,7 +92,14 @@ def readFileIntoLines(filename) {
     }
 }
 
-run_packer() {
+def run_packer() {
    sh "build-support/run_packer.sh"
 }
 
+def run_terraform() {
+   sh "build-support/run_terraform.sh"
+}
+
+def run_ansible() {
+   sh "build-support/run_ansible.sh"
+}
