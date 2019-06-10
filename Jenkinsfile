@@ -12,27 +12,8 @@ def go() {
     def git_hash = get_git_hash()
     def git_branch = get_git_branch()
     echo "current git sha is ${git_hash} and branch is ${git_branch}"
-    if ( get_git_branch() != "master" ) {
-        try {
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; terraform init"
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform apply"
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; terraform output --json > test/verify/files/terraform.json"
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; inspec exec test/verify -t aws://eu-central-1"
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform destroy"
-          sh "inspec exec test/service_test -t ssh://ubuntu@3.88.11.51 -i /home/ubuntu/ec2-key.pem"
-        } catch (e) {
-            throw e
-        }
-    } else {
-        try {
-          sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; terraform init"
-          sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform apply"
-          sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; terraform output --json > test/verify/files/terraform.json"
-          sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; inspec exec test/verify -t aws://eu-central-1"
-        } catch (e) {
-            throw e
-        }
-    }
+    echo "Running the check to see which files got effected"
+    sh build-support/check-effected.sh git_hash
 }
 
 def get_git_hash() {
