@@ -1,5 +1,5 @@
 #!/bin/sh
-commit_id=$1
+commit_id=`git rev-parse HEAD`
 
 for var in terraform packer ansible
 do
