@@ -39,8 +39,7 @@ def go() {
                         break;
                 } else {
                         echo "There was no change in packer, terraform and ansible related code... no build process..."
-                    }
-                }
+		}
             }
         }
 }
