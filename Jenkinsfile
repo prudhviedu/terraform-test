@@ -28,8 +28,8 @@ def get_git_branch() {
     readFile("gitbranch").replace("\n", "")
 }
 
-def get_changed_dir(git_sha) {
-    sh "sh build-support/check-effected.sh ${git_hash} > effected_dir"
+def get_changed_dir() {
+    sh "sh build-support/check-effected.sh > effected_dir"
     readFileIntoLines("effected_dir")
 }
 def readFileIntoLines(filename) {
