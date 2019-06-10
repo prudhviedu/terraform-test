@@ -13,7 +13,7 @@ def go() {
     def git_branch = get_git_branch()
     echo "current git sha is ${git_hash} and branch is ${git_branch}"
     echo "Running the check to see which files got effected"
-    def changed_services = get_changed_dir()
+    def changed_dir = get_changed_dir()
     echo "changed directories are ${git_changed_dir}"
     for (i = 0; i < changed_dir.size(); i++) {
         def tool_name = changed_dir[i]
