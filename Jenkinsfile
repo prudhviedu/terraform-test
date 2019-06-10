@@ -20,12 +20,24 @@ def go() {
         if (tool_name.trim() != "") {
 
                 if ( get_git_branch() != "master" && tool_name == "packer") {
-			echo "Running PACKER"
-			run_packer()
-			echo "Running Terraform"
-			run_terraform()
-			echo "Running Ansible"
-			run_ansible()
+                        try {
+                                echo "Running PACKER"
+                                sh "build-support/run_packer.sh"
+                        } catch (e) {
+                                throw e
+                        }
+                        try {
+                                echo "Running Terraform"
+                                sh "build-support/run_terraform.sh"
+                        } catch (e) {
+                                throw e
+                        }
+                        try {
+                                echo "Running Ansible"
+                                sh "build-support/run_ansible.sh"
+                        } catch (e) {
+                                throw e
+                        }
 			break;
                 } else if ( get_git_branch() != "master" && tool_name == "terraform" ) {
 			try {
@@ -42,8 +54,12 @@ def go() {
                         }    			
                         break;
                 } else if ( get_git_branch() != "master" && tool_name == "ansible" ) {
-                        echo "Running Ansible"
-                        run_ansible()
+                        try {
+                                echo "Running Ansible"
+                                sh "build-support/run_ansible.sh"
+                        } catch (e) {
+                                throw e
+                        }
                         break;
                 } else {
                         echo "There was no change in packer, terraform and ansible related code... no build process..."
