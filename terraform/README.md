@@ -88,9 +88,3 @@ terraform output --json > test/verify/files/terraform.json
 
 # run the inspec profile to verify the setup
 inspec exec test/verify -t aws://
-```
-
-
-
-
-

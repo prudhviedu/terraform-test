@@ -29,6 +29,6 @@ def get_git_branch() {
 }
 
 def get_changed_dir() {
-    sh "./build-support/check-effected.sh ${git_hash} > effected_dir"
-    sh "cat effected_dir"
+    sh "sh build-support/check-effected.sh ${git_hash} > effected_dir"
+    readFile("effected_dir").replace("\n", "")
 }
