@@ -13,7 +13,13 @@ def go() {
     def git_branch = get_git_branch()
     echo "current git sha is ${git_hash} and branch is ${git_branch}"
     echo "Running the check to see which files got effected"
-    sh build-support/check-effected.sh git_hash
+    try {
+       sh "build-support/check-effected.sh ${git_hash}"
+    } catch (e) {
+       throw e
+    }
+}
+
 }
 
 def get_git_hash() {
