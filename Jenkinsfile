@@ -16,7 +16,7 @@ def go() {
     def git_changed_dir = get_changed_dir()
     echo "changed directories are ${git_changed_dir}"
     for (i = 0; i < git_changed_dir.size(); i++) {
-        def tool_name = changed_dir[i]
+        def tool_name = git_changed_dir[i]
         if (tool_name.trim() != "") {
 
                 if ( get_git_branch() != "master" && tool_name == "packer") {
