@@ -31,3 +31,8 @@ def get_git_branch() {
     sh "echo ${env.JOB_NAME} | cut -d/ -f 2 > gitbranch"
     readFile("gitbranch").replace("\n", "")
 }
+
+def get_git_branch() {
+    sh "./build-support/check-effected.sh > effected_dir"
+    sh "cat effected_dir"
+}
