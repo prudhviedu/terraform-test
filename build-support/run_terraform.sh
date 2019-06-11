@@ -1,6 +1,6 @@
 #!/bin/sh
 echo "Applying terraform"
-cd terraform/modules
+cd terraform
 
 export AWS_PROFILE='test-env'
 export AWS_REGION='us-east-1'
