@@ -72,7 +72,7 @@ resource "aws_security_group" "default" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   # outbound internet access
@@ -98,7 +98,6 @@ resource "aws_elb" "web" {
     lb_protocol       = "http"
   }
 }
-
 #resource "aws_key_pair" "auth" {
 #  key_name   = "${var.key_name}"
 #  public_key = "${file(var.public_key_path)}"

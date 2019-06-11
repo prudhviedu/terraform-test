@@ -1,4 +1,4 @@
-name: verify
+name: terraform_test
 title: InSpec Profile to verify Terraform provisioning
 maintainer: Prudhvi
 copyright: Prudhvi

@@ -1,4 +1,4 @@
-output "address" {
+output "web_address" {
   value = "${aws_elb.web.dns_name}"
 }
 
@@ -11,5 +11,5 @@ output "vpc_id" {
 }
 
 output "web_public_ip" {
-  value = ["${aws_instance.web.public_ip}"]
+  value = "${aws_instance.web.public_ip}"
 }
