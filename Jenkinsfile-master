@@ -1,9 +1,25 @@
-properties([[$class: 'JiraProjectProperty'], parameters([choice(choices: ['prod-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env'], description: '', name: 'delpoy_in'), string(defaultValue: '', description: 'which version', name: 'tagVersion', trim: true)])])
-node {
-    stage('checkout') {
-        checkout([$class: 'GitSCM', branches: [[name: "${params.tagVersion}"]],
-              userRemoteConfigs: [[url: 'https://github.com/prudhviedu/terraform-test.git',
-                                   credentialsId: 'GitUI']]
-        ])
+pipeline {
+agent any
+
+environment{
+    branch1 = 'stack'
+    branch2 = 'over'
+    branch3 = 'flow'
+}
+
+stages {
+    stage('Stage-One') {
+        steps {
+            script {                
+                env.BRANCHDEPLOY = input message: 'User input required',
+                ok: 'Deploy!',
+                parameters: [choice(name: 'Branch to deploy', choices: "${branch1}\n${branch2}\n${branch3}", description: 'What branch you wont deploy?')]
+            }
+        }
+    }
+    stage('Stage-Two'){
+        steps{
+            sh "echo ${BRANCHDEPLOY}"
+        }
     }
 }
