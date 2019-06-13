@@ -6,5 +6,87 @@ node {
                                    credentialsId: 'GitUI']]
         ])
     }
+    go()
+}
+def go() {
+    echo "Running the check to see which files got effected"
+    def git_changed_dir = get_changed_dir()
+    echo "changed directories are ${git_changed_dir}"
+    for (i = 0; i < git_changed_dir.size(); i++) {
+        def tool_name = git_changed_dir[i]
+        if (tool_name.trim() != "") {
+
+                if ( get_git_branch() != "master" && tool_name == "packer") {
+                        try {
+                                echo "Running PACKER"
+				run_packer()
+                        } catch (e) {
+                                throw e
+                        }
+                        try {
+                                echo "Running Terraform"
+				run_terraform()
+                        } catch (e) {
+                                throw e
+                        }
+                        try {
+                                echo "Running Ansible"
+				run_ansible()
+                        } catch (e) {
+                                throw e
+                        }
+			break;
+                } else if ( get_git_branch() != "master" && tool_name == "terraform" ) {
+			try {
+                        	echo "Running Terraform"
+				run_terraform()
+			} catch (e) {
+			        throw e
+			}
+                        try {   
+                                echo "Running Ansible"
+				run_ansible()
+                        } catch (e) { 
+                                throw e       
+                        }    			
+                        break;
+                } else if ( get_git_branch() != "master" && tool_name == "ansible" ) {
+                        try {
+                                echo "Running Ansible"
+				run_ansible()
+                        } catch (e) {
+                                throw e
+                        }
+                        break;
+                } else {
+                        echo "There was no change in packer, terraform and ansible related code... no build process..."
+		}
+            }
+        }
 }
 
+
+def get_changed_dir() {
+    sh "build-support/check-effected.sh > effected_dir"
+    readFileIntoLines("effected_dir")
+}
+def readFileIntoLines(filename) {
+    def contents = readFile(filename)
+    if (contents.trim() == "") {
+        return []
+    } else {
+        return contents.split("\n")
+    }
+}
+
+def run_packer() {
+   sh "build-support/run_packer.sh"
+}
+
+def run_terraform() {
+   sh "build-support/run_terraform.sh"
+}
+
+def run_ansible() {
+   sh "build-support/run_ansible.sh"
+}
