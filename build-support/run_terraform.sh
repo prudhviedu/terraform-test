@@ -1,9 +1,15 @@
 #!/bin/sh
+if [ "$#" -eq 2 ]; then
+	export AWS_PROFILE=$1
+	export AWS_REGION=$2
+else
+	export AWS_REGION='us-east-1'
+	export AWS_PROFILE='test-env'
+fi
 echo "Applying terraform"
+
 cd terraform
 
-export AWS_PROFILE='test-env'
-export AWS_REGION='us-east-1'
 terraform init
 echo 'yes' |terraform apply
 terraform output --json > test_cases/terraform_test/files/terraform.json

@@ -1,4 +1,4 @@
-properties([[$class: 'JiraProjectProperty'], parameters([choice(choices: ['prod-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env'], description: '', name: 'deploy_in'), string(defaultValue: '', description: 'which version', name: 'tagVersion', trim: true)])])
+properties([[$class: 'JiraProjectProperty'], parameters([choice(choices: ['test-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env', 'prod-env'], description: '', name: 'deploy_env'), string(defaultValue: 'us-east-1', description: '', name: 'deploy_region', trim: true), string(description: '', name: 'tagVersion', trim: true)])])
 node {
     stage('checkout') {
         checkout([$class: 'GitSCM', branches: [[name: "${params.tagVersion}"]],
@@ -6,14 +6,13 @@ node {
                                    credentialsId: 'GitUI']]
         ])
     }
-    go("${params.deploy_in}")
+    go("${params.deploy_env}", "${params.deploy_region}", "{params.tagVersion}")
 }
-def go(deploy_in) {
-    echo "deployment in ${deploy_in} and deploy_in"
+def go(deploy_env, deploy_region, tagVersion) {
+    echo "deploying the ${tagVersion} code in ${deploy_env}, region ${deploy_region}"
     echo "Running the check to see which files got effected"
     def git_changed_dir = get_changed_dir()
     echo "changed directories are ${git_changed_dir}"
-    run_packer(deploy_in)
     for (i = 0; i < git_changed_dir.size(); i++) {
         def tool_name = git_changed_dir[i]
         if (tool_name.trim() != "") {
@@ -21,19 +20,19 @@ def go(deploy_in) {
                 if ( get_git_branch() != "master" && tool_name == "packer") {
                         try {
                                 echo "Running PACKER"
-				run_packer()
+				run_packer(deploy_env, deploy_region)
                         } catch (e) {
                                 throw e
                         }
                         try {
                                 echo "Running Terraform"
-				run_terraform()
+				run_terraform(deploy_env, deploy_region)
                         } catch (e) {
                                 throw e
                         }
                         try {
                                 echo "Running Ansible"
-				run_ansible()
+				run_ansible(deploy_env, deploy_region)
                         } catch (e) {
                                 throw e
                         }
@@ -41,13 +40,13 @@ def go(deploy_in) {
                 } else if ( get_git_branch() != "master" && tool_name == "terraform" ) {
 			try {
                         	echo "Running Terraform"
-				run_terraform()
+				run_terraform(deploy_env, deploy_region)
 			} catch (e) {
 			        throw e
 			}
                         try {   
                                 echo "Running Ansible"
-				run_ansible()
+				run_ansible(deploy_env, deploy_region)
                         } catch (e) { 
                                 throw e       
                         }    			
@@ -55,7 +54,7 @@ def go(deploy_in) {
                 } else if ( get_git_branch() != "master" && tool_name == "ansible" ) {
                         try {
                                 echo "Running Ansible"
-				run_ansible()
+				run_ansible(deploy_env, deploy_region)
                         } catch (e) {
                                 throw e
                         }
@@ -81,14 +80,14 @@ def readFileIntoLines(filename) {
     }
 }
 
-def run_packer(deploy_in) {
-   sh "build-support/run_packer.sh ${deploy_in}"
+def run_packer(deploy_env, deploy_region) {
+   sh "build-support/run_packer.sh ${deploy_env} ${deploy_region}"
 }
 
-def run_terraform() {
-   sh "build-support/run_terraform.sh"
+def run_terraform(deploy_env, deploy_region) {
+   sh "build-support/run_terraform.sh ${deploy_env} ${deploy_region}"
 }
 
-def run_ansible() {
-   sh "build-support/run_ansible.sh"
+def run_ansible(deploy_env, deploy_region) {
+   sh "build-support/run_ansible.sh ${deploy_env} ${deploy_region}"
 }
