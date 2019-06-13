@@ -17,7 +17,7 @@ def go(deploy_env, deploy_region, tagVersion) {
         def tool_name = git_changed_dir[i]
         if (tool_name.trim() != "") {
 
-                if ( get_git_branch() == "master" && tool_name == "packer") {
+                if ( tool_name == "packer") {
                         try {
                                 echo "Running PACKER"
 				run_packer(deploy_env, deploy_region)
@@ -37,7 +37,7 @@ def go(deploy_env, deploy_region, tagVersion) {
                                 throw e
                         }
 			break;
-                } else if ( get_git_branch() == "master" && tool_name == "terraform" ) {
+                } else if ( tool_name == "terraform" ) {
 			try {
                         	echo "Running Terraform"
 				run_terraform(deploy_env, deploy_region)
@@ -51,7 +51,7 @@ def go(deploy_env, deploy_region, tagVersion) {
                                 throw e       
                         }    			
                         break;
-                } else if ( get_git_branch() == "master" && tool_name == "ansible" ) {
+                } else if ( tool_name == "ansible" ) {
                         try {
                                 echo "Running Ansible"
 				run_ansible(deploy_env, deploy_region)
@@ -64,10 +64,6 @@ def go(deploy_env, deploy_region, tagVersion) {
 		}
             }
         }
-}
-def get_git_branch() {
-    sh "echo ${env.JOB_NAME} | cut -d/ -f 2 > gitbranch"
-    readFile("gitbranch").replace("\n", "")
 }
 
 def get_changed_dir() {
