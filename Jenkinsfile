@@ -12,27 +12,62 @@ def go() {
     def git_hash = get_git_hash()
     def git_branch = get_git_branch()
     echo "current git sha is ${git_hash} and branch is ${git_branch}"
-    if ( get_git_branch() != "master" ) {
-        try {
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; terraform init"
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform apply"
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; terraform output --json > test/verify/files/terraform.json"
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; inspec exec test/verify -t aws://eu-central-1"
-          sh "export AWS_PROFILE='test-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform destroy"
-        } catch (e) {
-            throw e
+    echo "Running the check to see which files got effected"
+    def git_changed_dir = get_changed_dir()
+    echo "changed directories are ${git_changed_dir}"
+    for (i = 0; i < git_changed_dir.size(); i++) {
+        def tool_name = git_changed_dir[i]
+        if (tool_name.trim() != "") {
+
+                if ( get_git_branch() != "master" && tool_name == "packer") {
+                        try {
+                                echo "Running PACKER"
+				run_packer()
+                        } catch (e) {
+                                throw e
+                        }
+                        try {
+                                echo "Running Terraform"
+				run_terraform()
+                        } catch (e) {
+                                throw e
+                        }
+                        try {
+                                echo "Running Ansible"
+				run_ansible()
+                        } catch (e) {
+                                throw e
+                        }
+			break;
+                } else if ( get_git_branch() != "master" && tool_name == "terraform" ) {
+			try {
+                        	echo "Running Terraform"
+				run_terraform()
+			} catch (e) {
+			        throw e
+			}
+                        try {   
+                                echo "Running Ansible"
+				run_ansible()
+                        } catch (e) { 
+                                throw e       
+                        }    			
+                        break;
+                } else if ( get_git_branch() != "master" && tool_name == "ansible" ) {
+                        try {
+                                echo "Running Ansible"
+				run_ansible()
+                        } catch (e) {
+                                throw e
+                        }
+                        break;
+                } else {
+                        echo "There was no change in packer, terraform and ansible related code... no build process..."
+		}
+            }
         }
-    } else {
-        try {
-          sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; terraform init"
-          sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; echo 'yes' |terraform apply"
-          sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; terraform output --json > test/verify/files/terraform.json"
-          sh "export AWS_PROFILE='prod-env'; export AWS_REGION='us-east-1'; inspec exec test/verify -t aws://eu-central-1"
-        } catch (e) {
-            throw e
-        }
-    }
 }
+
 
 def get_git_hash() {
     sh "git rev-parse HEAD > githash"
@@ -42,4 +77,29 @@ def get_git_hash() {
 def get_git_branch() {
     sh "echo ${env.JOB_NAME} | cut -d/ -f 2 > gitbranch"
     readFile("gitbranch").replace("\n", "")
+}
+
+def get_changed_dir() {
+    sh "build-support/check-effected.sh > effected_dir"
+    readFileIntoLines("effected_dir")
+}
+def readFileIntoLines(filename) {
+    def contents = readFile(filename)
+    if (contents.trim() == "") {
+        return []
+    } else {
+        return contents.split("\n")
+    }
+}
+
+def run_packer() {
+   sh "build-support/run_packer.sh"
+}
+
+def run_terraform() {
+   sh "build-support/run_terraform.sh"
+}
+
+def run_ansible() {
+   sh "build-support/run_ansible.sh"
 }

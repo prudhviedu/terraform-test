@@ -1,0 +1,10 @@
+properties([[$class: 'JiraProjectProperty'], parameters([choice(choices: ['prod-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env'], description: '', name: 'delpoy_in'), string(defaultValue: '', description: 'which version', name: 'tagVersion', trim: true)])])
+node {
+    stage('checkout') {
+        checkout([$class: 'GitSCM', branches: [[name: 'v.1.0.0']],
+              userRemoteConfigs: [[url: 'https://github.com/prudhviedu/terraform-test.git',
+                                   credentialsId: 'my-user-id']]
+        ])
+    }
+}
+

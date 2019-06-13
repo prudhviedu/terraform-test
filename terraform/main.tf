@@ -1,13 +1,13 @@
-# Two-Tier example from https://github.com/terraform-providers/terraform-provider-aws
 
 # Specify the provider and access details
 provider "aws" {
   region = "${var.aws_region}"
+  version = "~> 2.11"
 }
 
 # Create a VPC to launch our instances into
 resource "aws_vpc" "default" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = "10.10.0.0/16"
 }
 
 # Create an internet gateway to give our subnet access to the outside world
@@ -25,7 +25,7 @@ resource "aws_route" "internet_access" {
 # Create a subnet to launch our instances into
 resource "aws_subnet" "default" {
   vpc_id                  = "${aws_vpc.default.id}"
-  cidr_block              = "10.0.1.0/24"
+  cidr_block              = "10.10.1.0/24"
   map_public_ip_on_launch = true
 }
 
@@ -72,7 +72,7 @@ resource "aws_security_group" "default" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   # outbound internet access
@@ -98,28 +98,12 @@ resource "aws_elb" "web" {
     lb_protocol       = "http"
   }
 }
-
 #resource "aws_key_pair" "auth" {
 #  key_name   = "${var.key_name}"
 #  public_key = "${file(var.public_key_path)}"
 #}
 
-locals {
-  connection = {
-    host        = "${aws_instance.web.public_ip}"
-    user        = "ubuntu"
-    private_key = "/tmp/ec2-key.pem"
-  }
-}
 resource "aws_instance" "web" {
-  # The connection block tells our provisioner how to
-  connection {
-      host        = "${local.connection["host"]}"
-      user        = "${local.connection["user"]}"
-      private_key = "${local.connection["private_key"]}"
-#    user = "ubuntu"
-
-  }
 
   instance_type = "t2.micro"
 
@@ -142,7 +126,18 @@ resource "aws_instance" "web" {
   # We run a remote provisioner on the instance after creating it.
   # In this case, we just install nginx and start it. By default,
   # this should be on port 80
-  provisioner "remote-exec" {
+}
+resource "null_resource" "cluster" {
+  # Bootstrap script can run on any instance of the cluster
+  # So we just choose the first in this case
+  connection {
+      host        = "${aws_instance.web.public_ip}"
+      user        = "ubuntu"
+      private_key = "${file("/home/ubuntu/ec2-key.pem")}"
+
+  }
+
+ provisioner "remote-exec" {
     inline = [
       "sudo apt-get -y update",
       "sudo apt-get -y install nginx",
@@ -150,3 +145,4 @@ resource "aws_instance" "web" {
     ]
   }
 }
+
