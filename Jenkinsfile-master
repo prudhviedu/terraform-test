@@ -1,4 +1,4 @@
-properties([[$class: 'JiraProjectProperty'], parameters([choice(choices: ['prod-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env'], description: '', name: 'delpoy_in'), string(defaultValue: '', description: 'which version', name: 'tagVersion', trim: true)])])
+properties([[$class: 'JiraProjectProperty'], parameters([choice(choices: ['prod-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env'], description: '', name: 'deploy_in'), string(defaultValue: '', description: 'which version', name: 'tagVersion', trim: true)])])
 node {
     stage('checkout') {
         checkout([$class: 'GitSCM', branches: [[name: "${params.tagVersion}"]],
@@ -6,12 +6,14 @@ node {
                                    credentialsId: 'GitUI']]
         ])
     }
-    go()
+    go("${params.deploy_in}")
 }
-def go() {
+def go(deploy_in) {
+    echo "deployment in ${deploy_in} and deploy_in"
     echo "Running the check to see which files got effected"
     def git_changed_dir = get_changed_dir()
     echo "changed directories are ${git_changed_dir}"
+    run_packer(deploy_in)
     for (i = 0; i < git_changed_dir.size(); i++) {
         def tool_name = git_changed_dir[i]
         if (tool_name.trim() != "") {
@@ -79,8 +81,8 @@ def readFileIntoLines(filename) {
     }
 }
 
-def run_packer() {
-   sh "build-support/run_packer.sh"
+def run_packer(deploy_in) {
+   sh "build-support/run_packer.sh ${deploy_in}"
 }
 
 def run_terraform() {
