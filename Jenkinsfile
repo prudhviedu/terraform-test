@@ -9,13 +9,11 @@ pipeline {
 					doGenerateSubmoduleConfigurations: false,
 					extensions: scm.extensions + [[$class: 'SubmoduleOption', disableSubmodules: false, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
 					submoduleCfg: [],
-					userRemoteConfigs: scm.userRemoteConfigs])
-				node {
-					echo 'Pulling...' + env.BRANCH_NAME
-				}
+					userRemoteConfigs: scm.userRemoteConfigs])				
+			}
+			node {
+				echo 'Pulling...' + env.BRANCH_NAME
 			}
 		}
-		stage 
 	}
-	
 }
