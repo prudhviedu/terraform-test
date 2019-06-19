@@ -11,6 +11,8 @@ pipeline {
 					submoduleCfg: [],
 					userRemoteConfigs: scm.userRemoteConfigs])				
 			}
+		}
+		stage ('test') {
 			node {
 				echo 'Pulling...' + env.BRANCH_NAME
 			}
