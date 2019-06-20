@@ -9,7 +9,7 @@ pipeline {
 		}
 		stage ('check_changes') {
 			steps {
-				sh 'sh build-support/check-effected.sh'
+				sh './build-support/check-effected.sh'
 			}
 		}
 	}
