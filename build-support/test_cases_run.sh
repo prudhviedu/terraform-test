@@ -9,6 +9,8 @@ run_packer() {
 }
 
 run_terraform() {
+	pwd
+	echo 'pwd in run_terraform'
 	./build-support/run_terraform.sh 
 }
 
@@ -19,6 +21,8 @@ changes_dir=`sh build-support/check-effected.sh`
 echo "changes in $changes_dir"
 for var in $changes_dir
 do
+	pwd
+	echo 'pwd in loop'
 	if [ "$git_branch" != "master" -a "$var" = "packer" ]; then
 		echo "running packer"
 		run_packer

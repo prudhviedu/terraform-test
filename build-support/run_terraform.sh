@@ -8,7 +8,7 @@ else
 fi
 echo "Applying terraform"
 
-cd $1
+cd src/terraform
 pwd
 terraform init
 echo 'yes' |terraform apply
