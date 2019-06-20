@@ -11,7 +11,7 @@ run_packer() {
 run_terraform() {
 	pwd
 	echo 'pwd in run_terraform'
-	./build-support/run_terraform.sh 
+	./build-support/run_terraform.sh $1 $2 $3 
 }
 
 run_ansible() {
