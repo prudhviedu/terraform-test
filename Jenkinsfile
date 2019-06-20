@@ -4,14 +4,8 @@ pipeline {
 		stage ('git') {
 			steps {
 				checkout scm
-				echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} ${env.BRANCH_NAME}"
+				echo "curren branch is ${BRANCH_NAME} and git SHA ${GIT_COMMIT} and ${env.GIT_COMMIT}"
 			}
-		}
-		stage ('echo') {
-			steps {
-				sh 'echo ${BRANCH_NAME}'
-			}
-		
 		}
 	}
 }
