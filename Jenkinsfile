@@ -27,7 +27,21 @@ pipeline {
 
 			steps {
 				echo "changes deducted in ${env.git_changes}"
-				sh 'printenv'	
+			}
+		}
+		stage ('testing') {
+			steps {
+				script {
+					for (i = 0; i < git_changes.size(); i++) {
+        					def tool_name = env.git_changes[i]
+						echo "changed tool name is ${tool_Name}"
+
+                    			if (get_git_branch() != "master" && tool_name == "terraform") {
+                        			stage ('Stage 1') {
+                            				sh 'echo Stage 1'
+                        			}
+                    			}
+				}
 			}
 		}
 	}
