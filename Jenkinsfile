@@ -3,13 +3,8 @@ pipeline {
 	stages {
 		stage ('git') {
 			steps {
-				checkout([
-					$class: 'GitSCM',
-					branches: scm.branches,
-					doGenerateSubmoduleConfigurations: false,
-					extensions: scm.extensions + [[$class: 'SubmoduleOption', disableSubmodules: false, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
-					submoduleCfg: [],
-					userRemoteConfigs: scm.userRemoteConfigs])
+				checkout scm
+				echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL} ${env.BRANCH_NAME}"
 			}
 		}
 		stage ('echo') {
