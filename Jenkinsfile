@@ -36,10 +36,11 @@ pipeline {
         					def tool_name = env.git_changes[i]
 						echo "changed tool name is ${tool_Name}"
 
-                    			if (get_git_branch() != "master" && tool_name == "terraform") {
-                        			stage ('Stage 1') {
-                            				sh 'echo Stage 1'
-                        			}
+                    				if (get_git_branch() != "master" && tool_name == "terraform") {
+                        				stage ('Stage 1') {
+                            					sh 'echo Stage 1'
+                        				}
+						}
                     			}
 				}
 			}
