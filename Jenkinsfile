@@ -32,7 +32,7 @@ pipeline {
 		stage ('test_cases_run') {
 			steps {
 				echo 'Running the test_cases'
-				sh 'chmod u+x build-support/test_cases_run.sh; build-support/test_cases_run.sh ${BRANCH_NAME} ${GIT_COMMIT}'
+				sh 'chmod u+x build-support/test_cases_run_non_master.sh; build-support/test_cases_run_non_master.sh ${BRANCH_NAME} ${GIT_COMMIT}'
 			}
 		}
 	}
