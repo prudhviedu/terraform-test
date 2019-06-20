@@ -32,7 +32,7 @@ pipeline {
 		stage ('testing') {
 			steps {
 				script {
-					for (i = 0; i < git_changes.size(); i++) {
+					for (i = 0; i < ${env.git_changes}.size(); i++) {
         					def tool_name = env.git_changes[i]
 						echo "changed tool name is ${tool_Name}"
 
