@@ -7,8 +7,9 @@ else
 	export AWS_PROFILE='test-env'
 fi
 echo "Applying terraform"
-
-cd src/terraform
+path="$1"
+echo "path from test_cases_run.sh is $path"
+cd $path
 pwd
 terraform init
 echo 'yes' |terraform apply

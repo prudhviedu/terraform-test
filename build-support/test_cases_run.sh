@@ -19,6 +19,7 @@ run_ansible() {
 }
 changes_dir=`sh build-support/check-effected.sh`
 echo "changes in $changes_dir"
+path='src/terraform'
 for var in $changes_dir
 do
 	pwd
@@ -28,7 +29,7 @@ do
 		run_packer
 	elif [ "$git_branch" != "master" -a "$var" = "terraform" ]; then
 		echo "running terraform"
-		run_terraform 'src/terraform' $aws_profile $aws_region
+		run_terraform "$path" $aws_profile $aws_region
 	elif [ "$git_branch" != "master" -a "$var" = "ansible" ]; then
 		echo "running ansible"
 		run_ansible
