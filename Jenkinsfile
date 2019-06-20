@@ -1,10 +1,29 @@
+def get_changed_dir() {
+    sh "build-support/check-effected.sh > effected_dir"
+    readFileIntoLines("effected_dir")
+}
+def readFileIntoLines(filename) {
+    def contents = readFile(filename)
+    if (contents.trim() == "") {
+        return []
+    } else {
+        return contents.split("\n")
+    }
+}
+
 pipeline {
 	agent any
 	stages {
-		stage ('git') {
+		stage ('checkout') {
 			steps {
 				checkout scm
-				echo "curren branch is ${BRANCH_NAME} and git SHA ${GIT_COMMIT} and ${env.GIT_COMMIT}"
+				echo "current git sha is ${BRANCH_NAME} and branch is ${GIT_COMMIT}"
+			}
+		}
+		stage ('check_changes') {
+			steps {
+				def git_changed_dir = get_changed_dir()
+				echo "changed directories are ${git_changed_dir}"
 			}
 		}
 	}
