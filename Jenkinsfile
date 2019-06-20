@@ -10,8 +10,13 @@ pipeline {
 					extensions: scm.extensions + [[$class: 'SubmoduleOption', disableSubmodules: false, recursiveSubmodules: true, reference: '', trackingSubmodules: false]],
 					submoduleCfg: [],
 					userRemoteConfigs: scm.userRemoteConfigs])
-				sh 'printenv'
 			}
+		}
+		stage ('echo') {
+			steps {
+				sh 'echo ${BRANCH_NAME}'
+			}
+		
 		}
 	}
 }
