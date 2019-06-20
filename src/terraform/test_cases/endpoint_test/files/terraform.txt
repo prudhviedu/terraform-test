@@ -1,4 +1,0 @@
-instance_id = i-0f9feb9924e17cb36
-vpc_id = vpc-058dbf1db674edb90
-web_address = terraform-example-elb-1885911112.eu-central-1.elb.amazonaws.com
-web_public_ip = 35.158.82.156

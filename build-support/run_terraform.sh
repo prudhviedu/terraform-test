@@ -1,15 +1,15 @@
 #!/bin/sh
-if [ "$#" -eq 2 ]; then
-	export AWS_PROFILE=$1
-	export AWS_REGION=$2
+if [ "$#" -eq 3 ]; then
+	export AWS_PROFILE=$2
+	export AWS_REGION=$3
 else
 	export AWS_REGION='us-east-1'
 	export AWS_PROFILE='test-env'
 fi
 echo "Applying terraform"
 
-cd $3
-
+cd $1
+echo 'present directory is `pwd`'
 terraform init
 echo 'yes' |terraform apply
 terraform output --json > test_cases/terraform_test/files/terraform.json

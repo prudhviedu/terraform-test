@@ -9,7 +9,7 @@ run_packer() {
 }
 
 run_terraform() {
-	sh build-suport/run_terraform.sh 
+	sh build-support/run_terraform.sh 
 }
 
 run_ansible() {
@@ -24,7 +24,7 @@ do
 		run_packer
 	elif [ "$git_branch" != "master" -a "$var" = "terraform" ]; then
 		echo "running terraform"
-		run_terraform $aws_profile $aws_region "src/terraform"
+		run_terraform 'src/terraform' $aws_profile $aws_region
 	elif [ "$git_branch" != "master" -a "$var" = "ansible" ]; then
 		echo "running ansible"
 		run_ansible

@@ -31,7 +31,8 @@ pipeline {
 		}
 		stage ('test_cases_run') {
 			steps {
-
+				echo 'Running the test_cases'
+				sh 'build-support/test_cases_run.sh ${BRANCH_NAME} ${GIT_COMMIT}'
 			}
 		}
 	}
