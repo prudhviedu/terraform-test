@@ -38,7 +38,6 @@ pipeline {
 		stage ('test_cases_run') {
 			steps {
 				echo 'Running the test_cases'
-				sh 'echo "branch name is ${env.GIT_BRANCH}"'
 				sh 'chmod u+x build-support/test_cases_run_master.sh'
 			}
 		}
