@@ -23,7 +23,7 @@ pipeline {
 			steps {
 				checkout([$class: 'GitSCM', branches: [[name: "${params.tagVersion}"]],userRemoteConfigs: [[url: 'https://github.com/prudhviedu/terraform-test.git',credentialsId: 'GitUI']]])
 
-				echo "current git sha is ${env.BRANCH_NAME} and branch is ${env.GIT_COMMIT}"
+				echo "current git sha is ${env.GIT_BRANCH} and branch is ${env.GIT_COMMIT}"
 			}
 		}
 		stage ('check_changes') {
@@ -38,7 +38,7 @@ pipeline {
 		stage ('test_cases_run') {
 			steps {
 				echo 'Running the test_cases'
-				sh 'chmod u+x build-support/test_cases_run.sh; build-support/test_cases_run.sh ${env.BRANCH_NAME} ${env.GIT_COMMIT} ${env.deploy_env} ${deploy_region}'
+				sh 'chmod u+x build-support/test_cases_run.sh; build-support/test_cases_run.sh ${env.GIT_BRANCH} ${env.GIT_COMMIT} ${env.deploy_env} ${deploy_region}'
 			}
 		}
 	}
