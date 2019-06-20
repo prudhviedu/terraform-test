@@ -1,71 +1,8 @@
-properties([[$class: 'JiraProjectProperty'], parameters([choice(choices: ['test-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env', 'prod-env'], description: '', name: 'deploy_env'), string(defaultValue: 'us-east-1', description: '', name: 'deploy_region', trim: true), string(description: '', name: 'tagVersion', trim: true)])])
-node {
-    stage('checkout') {
-        checkout([$class: 'GitSCM', branches: [[name: "${params.tagVersion}"]],
-              userRemoteConfigs: [[url: 'https://github.com/prudhviedu/terraform-test.git',
-                                   credentialsId: 'GitUI']]
-        ])
-    }
-    go("${params.deploy_env}", "${params.deploy_region}", "{params.tagVersion}")
+parameters {
+  choice choices: ['test-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env', 'prod-env'], description: '', name: 'deploy_env'
+  string defaultValue: 'us-east-1', description: '', name: 'deploy_region', trim: true
+  string defaultValue: 'nill', description: '', name: 'tagVersion', trim: true
 }
-def go(deploy_env, deploy_region, tagVersion) {
-    echo "deploying the ${tagVersion} code in ${deploy_env}, region ${deploy_region}"
-    echo "Running the check to see which files got effected"
-    def git_changed_dir = get_changed_dir()
-    echo "changed directories are ${git_changed_dir}"
-    for (i = 0; i < git_changed_dir.size(); i++) {
-        def tool_name = git_changed_dir[i]
-        if (tool_name.trim() != "") {
-
-                if ( tool_name == "packer") {
-                        try {
-                                echo "Running PACKER"
-				run_packer(deploy_env, deploy_region)
-                        } catch (e) {
-                                throw e
-                        }
-                        try {
-                                echo "Running Terraform"
-				run_terraform(deploy_env, deploy_region)
-                        } catch (e) {
-                                throw e
-                        }
-                        try {
-                                echo "Running Ansible"
-				run_ansible(deploy_env, deploy_region)
-                        } catch (e) {
-                                throw e
-                        }
-			break;
-                } else if ( tool_name == "terraform" ) {
-			try {
-                        	echo "Running Terraform"
-				run_terraform(deploy_env, deploy_region)
-			} catch (e) {
-			        throw e
-			}
-                        try {   
-                                echo "Running Ansible"
-				run_ansible(deploy_env, deploy_region)
-                        } catch (e) { 
-                                throw e       
-                        }    			
-                        break;
-                } else if ( tool_name == "ansible" ) {
-                        try {
-                                echo "Running Ansible"
-				run_ansible(deploy_env, deploy_region)
-                        } catch (e) {
-                                throw e
-                        }
-                        break;
-                } else {
-                        echo "There was no change in packer, terraform and ansible related code... no build process..."
-		}
-            }
-        }
-}
-
 def get_changed_dir() {
     sh "build-support/check-effected.sh > effected_dir"
     readFileIntoLines("effected_dir")
@@ -79,14 +16,31 @@ def readFileIntoLines(filename) {
     }
 }
 
-def run_packer(deploy_env, deploy_region) {
-   sh "build-support/run_packer.sh ${deploy_env} ${deploy_region}"
+pipeline {
+	agent any
+	stages {
+		stage ('checkout') {
+			steps {
+				checkout([$class: 'GitSCM', branches: [[name: "${params.tagVersion}"]],userRemoteConfigs: [[url: 'https://github.com/prudhviedu/terraform-test.git',credentialsId: 'GitUI']]])
+
+				echo "current git sha is ${BRANCH_NAME} and branch is ${GIT_COMMIT}"
+			}
+		}
+		stage ('check_changes') {
+			environment {
+				git_changes = get_changed_dir()
+			}
+
+			steps {
+				echo "changes deducted in ${env.git_changes}"
+			}
+		}
+		stage ('test_cases_run') {
+			steps {
+				echo 'Running the test_cases'
+				sh 'chmod u+x build-support/test_cases_run.sh; build-support/test_cases_run.sh ${BRANCH_NAME} ${GIT_COMMIT} ${env.deploy_env} ${deploy_region}'
+			}
+		}
+	}
 }
 
-def run_terraform(deploy_env, deploy_region) {
-   sh "build-support/run_terraform.sh ${deploy_env} ${deploy_region}"
-}
-
-def run_ansible(deploy_env, deploy_region) {
-   sh "build-support/run_ansible.sh ${deploy_env} ${deploy_region}"
-}
