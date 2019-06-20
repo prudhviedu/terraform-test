@@ -40,7 +40,6 @@ pipeline {
 				echo 'Running the test_cases'
 				sh 'echo "branch name is ${env.GIT_BRANCH}"'
 				sh 'chmod u+x build-support/test_cases_run_master.sh'
-				sh 'sh build-support/test_cases_run_master.sh "${env.GIT_BRANCH}" "${env.GIT_COMMIT}" "${env.deploy_env}" "${deploy_region}"'
 			}
 		}
 	}
