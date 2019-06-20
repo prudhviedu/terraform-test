@@ -11,7 +11,7 @@ run_packer() {
 run_terraform() {
 	pwd
 	echo 'pwd in run_terraform'
-	./build-support/run_terraform.sh aravind $2 $3
+	./build-support/run_terraform.sh $2 $3
 	if [ $? -ne 0 ]; then
 		exit 1
 	fi
@@ -32,7 +32,7 @@ do
 		run_packer
 	elif [ "$git_branch" != "master" -a "$var" = "terraform" ]; then
 		echo "running terraform"
-		run_terraform "$path" $aws_profile $aws_region
+		run_terraform $aws_profile $aws_region
 		if [ $? -ne 0 ]; then
 			echo 'Terraform run failed'
 			exit 1

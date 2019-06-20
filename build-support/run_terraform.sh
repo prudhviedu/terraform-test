@@ -1,15 +1,14 @@
 #!/bin/sh
 if [ "$#" -eq 3 ]; then
-	export AWS_PROFILE=$2
-	export AWS_REGION=$3
+	export AWS_PROFILE=$1
+	export AWS_REGION=$2
 else
 	export AWS_REGION='us-east-1'
 	export AWS_PROFILE='test-env'
 fi
 echo "Applying terraform"
-path="$1"
-echo "path from test_cases_run.sh is $path"
-cd $path
+#path="$1"
+cd src/terraform
 pwd
 terraform init
 echo 'yes' |terraform apply
@@ -41,4 +40,8 @@ else
                 exit 1
         fi
 	echo 'yes' |terraform destroy
+        if [ $? -eq 0 ]; then
+                echo "terraform destroy failed, please cleanup the resources"
+                exit 1
+        fi
 fi
