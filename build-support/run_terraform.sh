@@ -9,7 +9,7 @@ fi
 echo "Applying terraform"
 
 cd $1
-echo 'present directory is `pwd`'
+pwd
 terraform init
 echo 'yes' |terraform apply
 terraform output --json > test_cases/terraform_test/files/terraform.json
