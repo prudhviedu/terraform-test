@@ -22,7 +22,7 @@ pipeline {
 		}
 		stage ('check_changes') {
 			steps {
-				def git_changed_dir = get_changed_dir()
+				git_changed_dir = get_changed_dir()
 				echo "changed directories are ${git_changed_dir}"
 			}
 		}
