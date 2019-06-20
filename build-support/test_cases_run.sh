@@ -5,15 +5,15 @@ aws_profile=$3
 aws_region=$4
 
 run_packer() {
-	sh build-support/run_packer.sh
+	./build-support/run_packer.sh
 }
 
 run_terraform() {
-	sh build-support/run_terraform.sh 
+	./build-support/run_terraform.sh 
 }
 
 run_ansible() {
-	sh build-support/run_ansible.sh
+	./build-support/run_ansible.sh
 }
 changes_dir=`sh build-support/check-effected.sh`
 echo "changes in $changes_dir"
