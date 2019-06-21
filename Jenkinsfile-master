@@ -35,7 +35,7 @@ pipeline {
 			}
 			steps {
 				echo "changes are ${env.changes}"
-				if (containerId.isEmpty()) {
+				if (changes.isEmpty()) {
 					echo "There are no changes found in Packer, Terraform and Ansible... exiting"
 					currentBuild.result = 'SUCCESS'
 				}
