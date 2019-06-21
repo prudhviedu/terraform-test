@@ -7,9 +7,6 @@ pipeline {
 	}
 	stages {
 		stage ('checkout') {
-			when {
-				branch 'master'
-			}
 			steps {
 				checkout([$class: 'GitSCM', branches: [[name: "${params.tagVersion}"]],userRemoteConfigs: [[url: 'https://github.com/prudhviedu/terraform-test.git',credentialsId: 'GitUI']]])
 
@@ -22,7 +19,7 @@ pipeline {
 			}
 			when {
 				expression {
-					return changes.isEmpty()
+					return ${env.changes.isEmpty()}
 				}
 			}
 			steps {
