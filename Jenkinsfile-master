@@ -1,16 +1,3 @@
-def get_changed_dir() {
-    sh "build-support/check-effected.sh > effected_dir"
-    readFileIntoLines("effected_dir")
-}
-def readFileIntoLines(filename) {
-    def contents = readFile(filename)
-    if (contents.trim() == "") {
-        return []
-    } else {
-        return contents.split("\n")
-    }
-}
-
 pipeline {
 	agent any
 	parameters {
@@ -33,27 +20,23 @@ pipeline {
 			environment {
 				changes = sh(script: "build-support/check-effected.sh", returnStdout: true).trim()	
 			}
-			steps {
-				echo "changes are ${env.changes}"
-				if (changes.isEmpty()) {
-					echo "There are no changes found in Packer, Terraform and Ansible... exiting"
-					currentBuild.result = 'SUCCESS'
+			when {
+				expression {
+					return changes.isEmpty()
 				}
+			}
+			steps {
+				currentBuild.result = 'SUCCESS'
 			}
 		}
 		stage ('test_cases_run') {
 			steps {
 				echo 'Running the test_cases'
-				echo "${params.deploy_env} ${params.deploy_region}"
-				sh 'chmod u+x build-support/test_cases_run_master.sh'
 				sh """
-				echo "parameters are  ${params.deploy_env} ${params.deploy_region}"
-				"""
-				sh """
+				chmod u+x build-support/test_cases_run_master.sh
 				build-support/test_cases_run_master.sh ${params.deploy_env} ${params.deploy_region}
 				"""
 			}
 		}
 	}
 }
-
