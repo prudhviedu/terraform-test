@@ -20,6 +20,9 @@ pipeline {
 	}
 	stages {
 		stage ('checkout') {
+			when {
+				branch 'master'
+			}
 			steps {
 				checkout([$class: 'GitSCM', branches: [[name: "${params.tagVersion}"]],userRemoteConfigs: [[url: 'https://github.com/prudhviedu/terraform-test.git',credentialsId: 'GitUI']]])
 
@@ -28,13 +31,14 @@ pipeline {
 		}
 		stage ('check_changes') {
 			environment {
-				git_changes = get_changed_dir()
-				environment = "${params.deploy_env}"
-				region = "${params.deploy_region}"
+				changes = sh(script: "build-support/check-effected.sh", returnStdout: true).trim()	
 			}
-
 			steps {
-				echo "changes deducted in ${env.git_changes}"
+				echo "changes are ${env.changes}"
+				if (containerId.isEmpty()) {
+					echo "There are no changes found in Packer, Terraform and Ansible... exiting"
+					currentBuild.result = 'SUCCESS'
+				}
 			}
 		}
 		stage ('test_cases_run') {
