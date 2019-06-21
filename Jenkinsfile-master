@@ -1,8 +1,3 @@
-parameters {
-  choice choices: ['test-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env', 'prod-env'], description: '', name: 'deploy_env'
-  string defaultValue: 'us-east-1', description: '', name: 'deploy_region', trim: true
-  string defaultValue: 'nill', description: '', name: 'tagVersion', trim: true
-}
 def get_changed_dir() {
     sh "build-support/check-effected.sh > effected_dir"
     readFileIntoLines("effected_dir")
@@ -18,6 +13,11 @@ def readFileIntoLines(filename) {
 
 pipeline {
 	agent any
+	parameters {
+		choice choices: ['test-env', 'dev-env', 'preprod-env', 'alpha-env', 'beta-env', 'prod-env'], description: '', name: 'deploy_env'
+		string defaultValue: 'us-east-1', description: '', name: 'deploy_region', trim: true
+		string defaultValue: 'nill', description: '', name: 'tagVersion', trim: true
+	}
 	stages {
 		stage ('checkout') {
 			steps {
@@ -38,7 +38,7 @@ pipeline {
 		stage ('test_cases_run') {
 			steps {
 				echo 'Running the test_cases'
-				echo '${params.deploy_env} ${params.deploy_env}'
+				echo "${params.deploy_env} ${params.deploy_env}"
 				sh 'chmod u+x build-support/test_cases_run_master.sh'
 				sh 'echo "parameter are ${params.deploy_env}"'
 				sh 'build-support/test_cases_run_master.sh ${params.deploy_env} ${params.deploy_env}'
