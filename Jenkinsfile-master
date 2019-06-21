@@ -18,9 +18,7 @@ pipeline {
 				changes = sh(script: "build-support/check-effected.sh", returnStdout: true).trim()	
 			}
 			when {
-				expression {
-					return changes.isEmpty()
-				}
+				expression { env.changes == null }
 			}
 			steps {
 				echo "changes in ${env.changes}"
