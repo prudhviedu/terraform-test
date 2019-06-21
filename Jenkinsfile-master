@@ -26,7 +26,8 @@ pipeline {
 				}
 			}
 			steps {
-				currentBuild.result = 'SUCCESS'
+				echo "changes in ${env.changes}"
+				echo "No changes in this build"
 			}
 		}
 		stage ('test_cases_run') {
