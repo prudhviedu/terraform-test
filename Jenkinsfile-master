@@ -24,7 +24,6 @@ pipeline {
 				echo "No changes found in Packer, Terraform and Ansible in this commit ${env.GIT_COMMIT} ..."
 				script {
 					currentBuild.result = 'SUCCESS'
-					sh 'exit 0'
 				}
 			}
 		}
