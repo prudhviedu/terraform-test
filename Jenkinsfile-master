@@ -19,7 +19,7 @@ pipeline {
 			}
 			when {
 				expression {
-					return ${env.changes.isEmpty()}
+					return changes.isEmpty()
 				}
 			}
 			steps {
