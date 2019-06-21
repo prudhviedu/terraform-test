@@ -38,7 +38,9 @@ pipeline {
 		stage ('test_cases_run') {
 			steps {
 				echo 'Running the test_cases'
+				echo '${params.deploy_env} ${params.deploy_env}'
 				sh 'chmod u+x build-support/test_cases_run_master.sh'
+				sh 'echo "parameter are ${params.deploy_env}"'
 				sh 'build-support/test_cases_run_master.sh ${params.deploy_env} ${params.deploy_env}'
 			}
 		}
