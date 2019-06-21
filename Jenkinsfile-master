@@ -21,8 +21,10 @@ pipeline {
 				expression { env.changes == null }
 			}
 			steps {
-				echo "changes in ${env.changes}"
-				echo "No changes in this build"
+				echo "No changes found in Packer, Terraform and Ansible in this commit ${env.GIT_COMMIT} ..."
+				script {
+					currentBuild.result = 'SUCCESS'
+				}
 			}
 		}
 		stage ('test_cases_run') {
