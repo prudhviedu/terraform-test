@@ -39,7 +39,7 @@ pipeline {
 			steps {
 				echo 'Running the test_cases'
 				sh 'chmod u+x build-support/test_cases_run_master.sh'
-				sh 'build-support/test_cases_run_master.sh ${env.GIT_BRANCH} ${env.GIT_COMMIT} ${params.deploy_env} ${params.deploy_env}'
+				sh 'build-support/test_cases_run_master.sh ${params.deploy_env} ${params.deploy_env}'
 			}
 		}
 	}
