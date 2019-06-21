@@ -29,8 +29,8 @@ pipeline {
 		stage ('check_changes') {
 			environment {
 				git_changes = get_changed_dir()
-				environment = ${params.deploy_env}
-				region = ${params.deploy_region}
+				environment = "${params.deploy_env}"
+				region = "${params.deploy_region}"
 			}
 
 			steps {
