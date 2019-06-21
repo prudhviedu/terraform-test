@@ -40,10 +40,14 @@ pipeline {
 		stage ('test_cases_run') {
 			steps {
 				echo 'Running the test_cases'
-				echo "${params.deploy_env} ${params.deploy_env}"
+				echo "${params.deploy_env} ${params.deploy_region}"
 				sh 'chmod u+x build-support/test_cases_run_master.sh'
-				sh 'echo "parameter are ${env.environment} ${env.region}"'
-				sh "build-support/test_cases_run_master.sh ${env.environment} ${env.region}"
+				sh """
+				echo "parameters are  ${params.deploy_env} ${params.deploy_region}"
+				"""
+				sh """
+				build-support/test_cases_run_master.sh ${params.deploy_env} ${params.deploy_region}
+				"""
 			}
 		}
 	}
