@@ -29,6 +29,8 @@ pipeline {
 		stage ('check_changes') {
 			environment {
 				git_changes = get_changed_dir()
+				environment = ${params.deploy_env}
+				region = ${params.deploy_region}
 			}
 
 			steps {
@@ -40,8 +42,8 @@ pipeline {
 				echo 'Running the test_cases'
 				echo "${params.deploy_env} ${params.deploy_env}"
 				sh 'chmod u+x build-support/test_cases_run_master.sh'
-				sh 'echo "parameter are ${params.deploy_env}"'
-				sh 'build-support/test_cases_run_master.sh ${params.deploy_env} ${params.deploy_env}'
+				sh 'echo "parameter are ${env.environment} ${env.region}"'
+				sh "build-support/test_cases_run_master.sh ${env.environment} ${env.region}"
 			}
 		}
 	}
