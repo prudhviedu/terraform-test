@@ -41,6 +41,11 @@ else
                 echo "endpoint_test case failed"
                 exit 1
         fi
+        inspec exec test_cases/access_to_storage -t ssh://ubuntu@$service_ip -i /home/ubuntu/ec2-key.pem
+        if [ $? -ne 0 ]; then
+                echo "access_to_storage case failed"
+                exit 1
+        fi
 	echo 'yes' |terraform destroy
         if [ $? -ne 0 ]; then
                 echo "terraform destroy failed, please cleanup the resources"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 git_branch=$1
 git_commit=$2
 aws_profile=$3
