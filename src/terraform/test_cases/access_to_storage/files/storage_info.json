@@ -1,0 +1,7 @@
+{
+    "mount1": {
+	"point" : "/",
+        "device": "/dev/xvda1",
+        "type": "ext4"
+    }
+}
