@@ -1,0 +1,90 @@
+{   
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": ["s3:ListBucket"],
+            "Resource": [
+                "arn:aws:s3:::mel-jenkins/${env}-jenkins-backup/",
+                "arn:aws:s3:::va-store/",
+                "arn:aws:s3:::mel-terraform-remote-state*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::mel-jenkins/${env}-jenkins-backup/*",
+                "arn:aws:s3:::va-store/certs/*",
+                "arn:aws:s3:::mel-terraform-remote-state*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:*",
+                "elasticloadbalancing:*",
+                "autoscaling:*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "BAHSSODeniedActions",
+            "Action": [
+                "ec2:Create*Gateway*",
+                "ec2:Delete*Gateway*",
+                "ec2:Detach*Gateway*",
+                "ec2:CreateNetworkAcl*",
+                "ec2:DeleteNetworkAcl*",
+                "ec2:ReplaceNetworkAcl*",
+                "ec2:AssociateRoute*",
+                "ec2:CreateRoute*",
+                "ec2:CreateVpnConnectionRoute",
+                "ec2:DeleteRoute*",
+                "ec2:DeleteVpnConnectionRoute",
+                "ec2:DisableRoute*",
+                "ec2:DisassociateRoute*",
+                "ec2:EnableVgwRoute*",
+                "ec2:ReplaceRoute*",
+                "ec2:AcceptVpcEndpoint*",
+                "ec2:CreateVpcEndpoint*",
+                "ec2:DeleteVpcEndpoint*",
+                "ec2:ModifyVpcEndpoint*",
+                "ec2:RejectVpcEndpoint*",
+                "ec2:AcceptVpcPeering*",
+                "ec2:CreateVpcPeering*",
+                "ec2:DeleteVpcPeering*",
+                "ec2:ModifyVpcPeering*",
+                "ec2:RejectVpcPeering*",
+                "ec2:A*Address*",
+                "ec2:AuthorizeSecurityGroup*",
+                "ec2:CreateSecurityGroup",
+                "ec2:CreateSubnet",
+                "ec2:CreateVpc",
+                "ec2:CreateVpcPeeringConnection",
+                "ec2:CreateVpnConn*",
+                "ec2:DeleteSecurityGroup",
+                "ec2:DeleteSubnet",
+                "ec2:DeleteVpc*",
+                "ec2:DeleteVpn*",
+                "ec2:Di*Address*",
+                "ec2:M*Address*",
+                "ec2:R*Address*",
+                "ec2:RevokeSecurity*",
+                "ec2:U*Address*"
+            ],
+            "Effect": "Deny",
+            "Resource": "*"
+        }
+    ]
+}

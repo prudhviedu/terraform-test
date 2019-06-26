@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# Update the yum package management tool
+yum -y update
+
+# Install Java
+yum install java -y
+
+# Install Git
+yum install git -y
+
+# Install Ansible
+amazon-linux-extras install ansible2 -y
+
+# Install PIP
+#sudo yum install python-pip -y
+curl https://bootstrap.pypa.io/get-pip.py | python
+
+# Install Credstash
+pip install credstash
+
+# upgrade botocore, needed by credstash
+pip install botocore --upgrade
+
+# Need to upgrade CLI after botocore update
+pip install awscli --upgrade
+
+# fix for broken boto - needed to run ansible playbooks
+pip install boto --upgrade
+
+# Download and Install Terraform 0.12.1
+wget https://releases.hashicorp.com/terraform/0.12.1/terraform_0.12.1_linux_amd64.zip
+unzip terraform_0.12.1_linux_amd64.zip
+mv terraform /usr/local/sbin/
+rm -f terraform_0.12.1_linux_amd64.zip
+
+# Download the latest Jenkins code package
+wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+
+# Import a key file from Jenkins-CI to enable installation from the package
+rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+
+# Install Jenkins
+yum install jenkins -y
+
+# set jenkins to startup listening on ipv4
+# https://serverfault.com/questions/871597/unable-to-access-jenkins-centos-7
+find="-Djava.awt.headless=true"
+replace="-Djava.awt.headless=true -Djava.net.preferIPv4Stack=true -Dhudson.model.DownloadService.noSignatureCheck=true"
+sed -i "s+$find+$replace+g" /etc/sysconfig/jenkins
+
+# Stop Jenkins as a service
+service jenkins stop
+
+# download and install Chef Inspec
+curl -k  https://packages.chef.io/files/stable/inspec/4.3.2/el/7/inspec-4.3.2-1.el7.x86_64.rpm -o inspec-4.3.2-1.el7.x86_64.rpm
+chmod 700 inspec-4.3.2-1.el7.x86_64.rpm
+rpm -i inspec-4.3.2-1.el7.x86_64.rpm
+rm -f inspec-4.3.2-1.el7.x86_64.rpm
+
+# TODO -- need to update for govcloud
+export AWS_DEFAULT_REGION="us-east-1"
+
+# Download backup from S3
+aws s3 cp s3://mel-jenkins/${env}-jenkins-backup/jenkins-configuration.tar.gz /var/lib/jenkins/jenkins-configuration.tar.gz
+
+cd /var/lib/jenkins/
+
+# Unzip backup
+tar -xopf /var/lib/jenkins/jenkins-configuration.tar.gz
+
+# Change into backup dir and copy files out
+cd /var/lib/jenkins/jenkins-configuration/jenkins
+yes | cp -rf * ../../
+
+# Change ownership of backup files to jenkins user
+chown jenkins:jenkins -R /var/lib/jenkins/
+
+# Clean up backups
+rm -f /var/lib/jenkins/jenkins-configuration.tar.gz
+rm -rf /var/lib/jenkins/jenkins-configuration
+
+# Set Jenkins to run on server boot
+systemctl enable jenkins
+
+# Start Jenkins as a service
+service jenkins start
