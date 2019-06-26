@@ -1,18 +1,15 @@
-variable "vpc" {
-  default = "dvpc"
+variable "aws_region" {
+  description = "AWS region to launch servers."
+  default     = "eu-central-1"
 }
-variable "Environment" {
-  default = "Dev"
-}
-# TODO -- add VPC ID once we have
-variable "vpc-id" {
-  default = "vpc-011169f21c2ac2922"
-}
-# TODO -- add VPC CIDR once we have
-variable "vpc-cidr" {
-  default = "10.247.100.0/22"
-}
-locals {
-  region = "${data.terraform_remote_state.mel-global.region}"
-  base_tags = "${data.terraform_remote_state.mel-global.base_tags}"
+
+# Ubuntu Precise 12.04 LTS (x64)
+variable "aws_amis" {
+  default = {
+    eu-central-1 = "ami-fa2fb595"
+    eu-west-1 = "ami-674cbc1e"
+    us-east-1 = "ami-1d4e7a66"
+    us-west-1 = "ami-969ab1f6"
+    us-west-2 = "ami-8803e0f0"
+  }
 }

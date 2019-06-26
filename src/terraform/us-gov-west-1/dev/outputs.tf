@@ -1,33 +1,16 @@
-#Used for VAEC required tagging
-output "Environment" {
-  value = "${var.Environment}"
+output "web_address" {
+  value = "${aws_elb.web.dns_name}"
 }
-output "vpc" {
-  value = "${var.vpc}"
+
+output "instance_id" {
+  value = "${aws_instance.web.id}"
 }
-output "vpc-id" {
-  value = "${var.vpc-id}"
+
+output "vpc_id" {
+  value = "${aws_vpc.default.id}"
 }
-output "vpc-cidr" {
-  value = "${var.vpc-cidr}"
+
+output "web_public_ip" {
+  value = "${aws_instance.web.public_ip}"
 }
-# TODO -- this needs to be redone so it is using an actual variable to reference
-#         use case -- need to use it in SG tags but cannot
-output "dvpc_base_tags" {
-  value = "${merge(
-            "${map(
-                "Environment", "${var.Environment}",
-                "VPC", "${var.vpc}"
-            )}",
-            "${local.base_tags}"
-  )}"
-}
-output "ssh_sg" {
-    value   =   "${aws_security_group.ssh_sg.id}"
-}
-output "jenkins_sg" {
-    value   =   "${aws_security_group.jenkins_sg.id}"
-}
-output "dns_sg" {
-    value   =   "${aws_security_group.dns_sg.id}"
-}
+
