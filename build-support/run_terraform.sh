@@ -42,9 +42,9 @@ else
         #        echo "endpoint_test case failed"
         #        exit 1
         #fi
-	#echo 'yes' |terraform destroy
-        #if [ $? -ne 0 ]; then
-        #        echo "terraform destroy failed, please cleanup the resources"
-        #        exit 1
-        #fi
+	echo 'yes' |terraform destroy
+        if [ $? -ne 0 ]; then
+                echo "terraform destroy failed, please cleanup the resources"
+                exit 1
+        fi
 fi

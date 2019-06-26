@@ -31,8 +31,8 @@ if [ "$#" -eq 4 ]; then
         aws_profile=$3
         aws_region=$4
 else
-        aws_profile='us-east-1'
-        aws_region='test-env'
+        aws_profile='test-env'
+        aws_region='us-east-1'
 fi
 if [ "$git_branch" = "master" ]; then
 	echo "changed in master branch... skipping the build right away"
