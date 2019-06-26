@@ -36,7 +36,7 @@ else
 fi
 if [ "$git_branch" = "master" ]; then
 	echo "changed in master branch... skipping the build right away"
-	exit 1
+	exit 0
 fi
 sh ./build-support/check-effected.sh > ./build-support/changed_directories.txt
 check=`cat ./build-support/changed_directories.txt | wc -l`
