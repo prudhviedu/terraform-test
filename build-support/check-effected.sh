@@ -1,6 +1,7 @@
 #!/bin/sh
 commit_id=`git rev-parse HEAD`
 git show $commit_id --name-only > files_list
+touch changed_dir.txt
 while read var
 do
 	echo $var | grep -E  "^src/terraform|^src/packer|^src/ansible" > /dev/null
