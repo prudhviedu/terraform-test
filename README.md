@@ -1,4 +1,4 @@
-<!-- # (Basic Two-Tier AWS Architecture)
+# (Basic Two-Tier AWS Architecture)
 
  Overview Terraform
 
@@ -25,8 +25,7 @@ Run with a command like this:
 ```
 terraform apply -var 'key_name={your_aws_key_name}' 
    -var 'public_key_path={location_of_your_key_in_your_local_machine}'
-```-->
-
+`
 ## Overview InSpec
 
 This template provides an InSpec profile inside of the test/verify profile. InSpec ships with [built-in AWS resources](https://www.inspec.io/docs/reference/resources/#aws-resources). 
